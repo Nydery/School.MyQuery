@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyQuery.Logic;
+using System;
 
 namespace MyQuery.ConApp
 {
@@ -6,7 +7,10 @@ namespace MyQuery.ConApp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Demo MyQuery!");
+
+            var intList = new int[] { 1, 2, 3, 4, 5, 6};
+            var strList = intList.Map(i => i.ToString());
         }
     }
 }

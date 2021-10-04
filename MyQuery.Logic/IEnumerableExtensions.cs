@@ -17,7 +17,7 @@ namespace MyQuery.Logic
             return result;
         }
 
-        public static IEnumerable<T> Filter<T> (this IEnumerable<T> source, Func<T, bool> predicate)
+        public static IEnumerable<T> Filter<T> (this IEnumerable<T> source, Predicate<T> predicate)
         {
             source.CheckArgument(nameof(source));
             predicate.CheckArgument(nameof(predicate));

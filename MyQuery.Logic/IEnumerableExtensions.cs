@@ -1,10 +1,17 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace MyQuery.Logic
 {
     public static class IEnumerableExtensions
     {
+        /// <summary>
+        /// Counts the elements of a collection IEnumerable<T>
+        /// </summary>
+        /// <typeparam name="T">Type of elements in collection 'source'</typeparam>
+        /// <param name="source">Collection of type 'T'</param>
+        /// <returns>Count of elements in collection</returns>
         public static int Count<T> (this IEnumerable<T> source)
         {
             var result = 0;
@@ -17,6 +24,13 @@ namespace MyQuery.Logic
             return result;
         }
 
+        /// <summary>
+        /// Filters a collection by a specified condition
+        /// </summary>
+        /// <typeparam name="T">Type of collection 'source'</typeparam>
+        /// <param name="source">Collection of type 'T'</param>
+        /// <param name="predicate">Condition on which is filtered</param>
+        /// <returns>Filtered collection</returns>
         public static IEnumerable<T> Filter<T> (this IEnumerable<T> source, Predicate<T> predicate)
         {
             source.CheckArgument(nameof(source));
@@ -33,6 +47,14 @@ namespace MyQuery.Logic
             return result;
         }
 
+        /// <summary>
+        /// Maps all elements of a collection to another collection of another type
+        /// </summary>
+        /// <typeparam name="T">Type of elements in collection 'source'</typeparam>
+        /// <typeparam name="TResult">Type of mapped element</typeparam>
+        /// <param name="source">Collection of type 'T'</param>
+        /// <param name="selector">Selector which returns the new type/value</param>
+        /// <returns>Mapped collection of new type</returns>
         public static IEnumerable<TResult> Map<T, TResult> (this IEnumerable<T> source, Func<T, TResult> selector)
         {
             source.CheckArgument(nameof(source));
@@ -48,6 +70,12 @@ namespace MyQuery.Logic
             return result;
         }
 
+        /// <summary>
+        /// Returns an array of any collection
+        /// </summary>
+        /// <typeparam name="T">Type of elements in 'source'</typeparam>
+        /// <param name="source">Collection of type 'T'</param>
+        /// <returns>Array of type 'T[]'</returns>
         public static T[] ToArray<T> (this IEnumerable<T> source)
         {
             source.CheckArgument(nameof(source));
@@ -162,7 +190,7 @@ namespace MyQuery.Logic
             {
                 changed = false;
 
-                for(int i = 0; i < srcList.Count - 2; i++)
+                for(int i = 0; i < srcList.Count - 1; i++)
                 {
                     if(compare(srcList[i+1], srcList[i]) > 0)
                     {
@@ -194,6 +222,60 @@ namespace MyQuery.Logic
             }
 
             return result;
+        }
+
+        class SortByComparer<T, TKey> : IComparer<T>
+            where TKey : IComparable
+        {
+            public Func<T, TKey> OrderBy { get; }
+
+            public SortByComparer(Func<T, TKey> orderby)
+            {
+                orderby.CheckArgument(nameof(orderby));
+
+                OrderBy = orderby;
+            }
+
+            public int Compare(T? x, T? y)
+            {
+                return OrderBy(x).CompareTo(OrderBy(y));
+            }
+        }
+
+        public static IEnumerable<T> SortBy<T, TKey> (this IEnumerable<T> source, Func<T, TKey> orderBy)
+            where TKey : IComparable
+        {
+            source.CheckArgument(nameof(source));
+            orderBy.CheckArgument(nameof(orderBy));
+
+
+            var result = source.ToArray();
+
+            Array.Sort(result, new SortByComparer<T, TKey>(orderBy));
+
+            return result;
+            /*
+            bool changed = false;
+
+            do
+            {
+                changed = false;
+
+                for (int i = 0; i < result.Count - 1; i++)
+                {
+                    if (orderBy(result[i]).CompareTo(orderBy(result[i + 1])) > 0)
+                    {
+                        var temp = result[i];
+                        result[i] = result[i + 1];
+                        result[i + 1] = temp;
+
+                        changed = true;
+                    }
+                }
+            } while (changed);
+            
+            return result;
+            */
         }
 
         public delegate void ActionRef<T1, T2, T3>(T1 arg1, ref T2 arg2, T3 arg3);

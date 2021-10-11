@@ -89,7 +89,13 @@ namespace MyQuery.Logic
 
             return new List<T>(source);
         }
-
+        /// <summary>
+        /// Creates the sum of a collection based on an transform method
+        /// </summary>
+        /// <typeparam name="T">collection type</typeparam>
+        /// <param name="source">source collection</param>
+        /// <param name="transform">transform method that represents an item</param>
+        /// <returns></returns>
         public static double Sum<T> (this IEnumerable<T> source, Func<T, double> transform)
         {
             source.CheckArgument(nameof(source));
@@ -105,6 +111,13 @@ namespace MyQuery.Logic
             return result;
         }
 
+        /// <summary>
+        /// Returns the smallest element in the collection based on a transform method
+        /// </summary>
+        /// <typeparam name="T">collection type</typeparam>
+        /// <param name="source">source collection</param>
+        /// <param name="transform">transform method that represents an item</param>
+        /// <returns>smallest element</returns>
         public static double? Min<T>(this IEnumerable<T> source, Func<T, double> transform)
         {
             source.CheckArgument(nameof(source));
@@ -123,6 +136,13 @@ namespace MyQuery.Logic
             return result;
         }
 
+        /// <summary>
+        /// Returns the biggest element in the collection based on a transform method
+        /// </summary>
+        /// <typeparam name="T">collection type</typeparam>
+        /// <param name="source">source collection</param>
+        /// <param name="transform">transform method that represents an item</param>
+        /// <returns>biggest element</returns>
         public static double? Max<T>(this IEnumerable<T> source, Func<T, double> transform)
         {
             source.CheckArgument(nameof(source));
@@ -141,6 +161,13 @@ namespace MyQuery.Logic
             return result;
         }
 
+        /// <summary>
+        /// Returns the average of all elements in the collection based on a transform method
+        /// </summary>
+        /// <typeparam name="T">collection type</typeparam>
+        /// <param name="source">source collection</param>
+        /// <param name="transform">transform method that represents an item</param>
+        /// <returns>average</returns>
         public static double? Average<T>(this IEnumerable<T> source, Func<T, double> transform)
         {
             source.CheckArgument(nameof(source));
@@ -148,7 +175,14 @@ namespace MyQuery.Logic
 
             return source.Sum(transform) / source.Count();
         }
-
+        
+        /// <summary>
+        /// Executes an action on every item in collection
+        /// </summary>
+        /// <typeparam name="T">type of collection</typeparam>
+        /// <param name="source">source collection</param>
+        /// <param name="action">action to be performed</param>
+        /// <returns>source collection</returns>
         public static IEnumerable<T> ForEach<T> (this IEnumerable<T> source, Action<T> action)
         {
             source.CheckArgument(nameof(source));
@@ -162,6 +196,13 @@ namespace MyQuery.Logic
             return source;
         }
 
+        /// <summary>
+        /// Executes an action on every item in collection with index
+        /// </summary>
+        /// <typeparam name="T">type of collection</typeparam>
+        /// <param name="source">source collection</param>
+        /// <param name="action">action to be performed</param>
+        /// <returns>source collection</returns>
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<int, T> action)
         {
             source.CheckArgument(nameof(source));
